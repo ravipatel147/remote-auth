@@ -1,0 +1,14 @@
+{
+    "name": "sky/jsr",
+    "description": "api authentication libarary",
+    "type": "library",
+    "license": "MTC",
+    "authors": [
+        {
+            "name": "ravi bhanderi",
+            "email": "ravibhanderi14@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
