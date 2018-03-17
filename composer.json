@@ -1,6 +1,6 @@
 {
-    "name": "JSR/JSRAuth",
-    "description": "api authentication libarary",
+    "name": "jsr/api-auth",
+    "description": "api authentication package for laravel",
     "type": "library",
     "license": "MTC",
     "authors": [
