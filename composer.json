@@ -1,5 +1,5 @@
 {
-    "name": "sky/jsr",
+    "name": "JSR/JSRAuth",
     "description": "api authentication libarary",
     "type": "library",
     "license": "MTC",

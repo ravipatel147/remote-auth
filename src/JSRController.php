@@ -1,6 +1,6 @@
 <?php
 
-namespace Sky\JSR;
+namespace JSR\JSRAuth;
 
 use Illuminate\Http\Request;
 

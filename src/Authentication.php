@@ -4,7 +4,7 @@
 * SKY/JSR configuaration
 */
 
-namespace Sky\JSR; 
+namespace JSR\JSRAuth;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Crypt;
