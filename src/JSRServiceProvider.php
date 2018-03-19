@@ -1,6 +1,6 @@
 <?php
 
-namespace JSR\JSRAuth;
+namespace Support\Remote;
 
 use Illuminate\Support\ServiceProvider;
 

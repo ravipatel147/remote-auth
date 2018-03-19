@@ -6,7 +6,7 @@
  * Time: 18:21
  */
 
-namespace JSR\JSRAuth;
+namespace Sky\JSR;
 use Illuminate\Support\Facades\Crypt;
 
 class JSRAuth extends Authentication
