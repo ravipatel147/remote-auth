@@ -2,7 +2,7 @@
     "name": "support/remote-auth",
     "description": "api authentication libarary",
     "type": "library",
-    "license": "MTC",
+    "license": "MTT",
     "authors": [
         {
             "name": "ravi bhanderi",
