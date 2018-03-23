@@ -1,8 +1,8 @@
 {
-    "name": "support/remote-auth",
+    "name": "sky/jsr",
     "description": "api authentication libarary",
     "type": "library",
-  
+    "license": "MTC",
     "authors": [
         {
             "name": "ravi bhanderi",
@@ -10,5 +10,10 @@
         }
     ],
     "minimum-stability": "stable",
-    "require": {}
+    "require": {
+       "autoload": {
+            "psr-4": {
+                "Support\\RemoteAuth\\": "src"
+            }
+    }
 }

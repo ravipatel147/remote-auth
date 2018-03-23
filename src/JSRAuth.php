@@ -6,7 +6,7 @@
  * Time: 18:21
  */
 
-namespace Support\Remote;
+namespace Support\RemoteAuth;
 use Illuminate\Support\Facades\Crypt;
 
 class JSRAuth extends Authentication

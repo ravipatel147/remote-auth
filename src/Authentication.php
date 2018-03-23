@@ -4,7 +4,7 @@
 * SKY/JSR configuaration
 */
 
-namespace Support\Remote;
+namespace Support\RemoteAuth;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Crypt;

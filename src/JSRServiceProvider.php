@@ -1,6 +1,6 @@
 <?php
 
-namespace Support\Remote;
+namespace Support\RemoteAuth;
 
 use Illuminate\Support\ServiceProvider;
 
