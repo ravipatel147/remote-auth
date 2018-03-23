@@ -10,10 +10,11 @@
     ],
     "minimum-stability": "stable",
     "require": {
-       "autoload": {
-            "psr-4": {
-                "Support\\RemoteAuth\\": "src"
-            }
-       }   
-    }
+       
+    },
+  "autoload": {
+        "psr-4": {
+            "Support\\RemoteAuth\\": "src"
+        }
+   } 
 }
