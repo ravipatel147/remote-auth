@@ -14,7 +14,7 @@ class JSRServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__.'/config/JSRAuth.php' => config_path('JSRAuth.php'),
+            __DIR__.'/config/RemoteAuth.php' => config_path('RemoteAuth.php'),
         ]);
     }
 

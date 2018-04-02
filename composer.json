@@ -2,7 +2,6 @@
     "name": "support/remote-auth",
     "description": "api authentication libarary",
     "type": "library",
-    "license": "MTT",
     "authors": [
         {
             "name": "ravi bhanderi",
@@ -13,6 +12,7 @@
     "require": {},
     "autoload": {
         "psr-4": {
-            "Support\\RemoteAuth\\": "src"
+            "Support\\RemoteAuth\\": "src/"
+        }
     }
-}
+}    
