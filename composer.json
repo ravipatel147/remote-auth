@@ -2,6 +2,7 @@
     "name": "support/remote-auth",
     "description": "api authentication libarary",
     "type": "library",
+    "license": "MTT",
     "authors": [
         {
             "name": "ravi bhanderi",
@@ -9,14 +10,9 @@
         }
     ],
     "minimum-stability": "stable",
-    "require": {
-        "php": ">=5.4.0",
-        "illuminate/support": "~5.0",
-        "illuminate/http": "~5.0"
-    },
-  "autoload": {
+    "require": {},
+    "autoload": {
         "psr-4": {
             "Support\\RemoteAuth\\": "src"
-        }
-   } 
-}  
+    }
+}

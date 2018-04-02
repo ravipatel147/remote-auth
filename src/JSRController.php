@@ -1,6 +1,6 @@
 <?php
 
-namespace Support\RemoteAuth;
+namespace Support\Remote;
 
 use Illuminate\Http\Request;
 
