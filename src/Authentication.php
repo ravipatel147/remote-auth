@@ -16,7 +16,7 @@ class Authentication
   /*get model reference for two step auth*/
  	public static function get_model() {
 
-		$model = config('JSRAuth.MODEL');
+		$model = config('RemoteAuth.MODEL');
 
 		if(empty($model)) {
 
@@ -28,7 +28,7 @@ class Authentication
 	/*check two step auth is on or off*/
 	public static function verify_two_stage() {
 
-		return config('JSRAuth.TWO_STAGE') == 'TRUE' ? TRUE :FALSE;
+		return config('RemoteAuth.TWO_STAGE') == 'TRUE' ? TRUE :FALSE;
 	}
 
 	/*verify of user on live database*/
@@ -82,12 +82,12 @@ class Authentication
 	{
 		$allow_login = true;
 		
-		if(config('JSRAuth.STOP_LOGIN') == true) {
+		if(config('RemoteAuth.STOP_LOGIN') == true) {
 
 
 			$date = empty($modelObject) ? Carbon::now() : $modelObject->loginDate;
-			$toDate = config('JSRAuth.TO_DATE');
-			$fromDate = config('JSRAuth.FROM_DATE');
+			$toDate = config('RemoteAuth.TO_DATE');
+			$fromDate = config('RemoteAuth.FROM_DATE');
             $date = strtotime($date);
 
 			if(! empty($toDate)) {

@@ -72,4 +72,10 @@ class JSRAuth extends Authentication
 	    return $key;
 
 	}
+
+	/*get user login by id*/
+   public static function byId($id) {
+
+   	   return Parent::get_ancript($id);
+   }
 }
