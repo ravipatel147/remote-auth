@@ -7,8 +7,7 @@
   <li>Place provider and aliase in app.php file in config folder</li>
   <br>
   <li>Setup middleware for api authentication handling.create middleware name as api middleware and past code below.<br> <br>
-    
-    <pre><?php
+<pre><?php
 
 namespace App\Http\Middleware;
 
