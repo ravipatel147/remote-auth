@@ -4,57 +4,31 @@
 * SKY/JSR configuaration
 */
 
-namespace Support\Remote;
+namespace Support\RemoteAuth;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Crypt;
 use Log;
+use Illuminate\Auth\AuthManager;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class Authentication
 {
-	
-  /*get model reference for two step auth*/
- 	public static function get_model() {
 
-		$model = config('RemoteAuth.MODEL');
-
-		if(empty($model)) {
-
-			$model = 'App\User';
-		}
-		return new $model;
-	}
-
-	/*check two step auth is on or off*/
-	public static function verify_two_stage() {
-
-		return config('RemoteAuth.TWO_STAGE') == 'TRUE' ? TRUE :FALSE;
-	}
-
-	/*verify of user on live database*/
-	public static function verify_auth(array $array)
+	public function config($key)
 	{
-		$model = self::get_model();
-		return $model->where($array)->first();
-	}
-
-	/*verify of user on live database*/
-	public static function verify_primary($key)
-	{
-		$model = self::get_model();
-		$auth_user =  $model->find($key);
-		return $auth_user;
+		return config('RemoteAuth.'.$key);
 	}
 
 	/* get ancription of id */
-	public static function get_ancript($key)
+	public  function get_ancript($key)
 	{
 		$key = encrypt($key);
 		return $key .'&' .encrypt(Carbon::now());
 	}
 
 	/* get ancription of id */
-	public static function get_decript($key)
+	public  function get_decript($key)
 	{
 		$date =substr($key,strpos($key,'&') + 1);
 		$primary = substr($key,0,strpos($key,'&'));
@@ -63,61 +37,92 @@ class Authentication
 
 			return false;
 		}
+        
+        try{
 
-		$date = decrypt($date);
-		$primary = decrypt($primary);
-		$auth = self::verify_primary($primary);
+			$date = decrypt($date);
+			$primary = decrypt($primary);
 
-		if(empty($auth)) {
-
-			return false;
+         } catch(DecryptException $e) {
+		  
+		    return false;
 		}
 
-		$auth->loginDate = $date;
+		 $auth = array();
+		 $auth['identifire'] = $primary;
+		 $auth['login_date'] = $date;
+		 
 		return $auth;
 	}
 
 	/* check stop login is true or false with recepected validation check */
-	public static function stopLogin($modelObject = null)
+	public  function stopLogin($login_date = null)
 	{
 		$allow_login = true;
 		
-		if(config('RemoteAuth.STOP_LOGIN') == true) {
+		if($this->config('stop_login') == true) {
 
-
-			$date = empty($modelObject) ? Carbon::now() : $modelObject->loginDate;
-			$toDate = config('RemoteAuth.TO_DATE');
-			$fromDate = config('RemoteAuth.FROM_DATE');
+			$date = empty($login_date) ? Carbon::now() : $login_date;
+			$from_date = $this->config('from_date');
+			$to_date = $this->config('to_date');
             $date = strtotime($date);
 
-			if(! empty($toDate)) {
+		    if(! empty($from_date) && trim($from_date) != '') {
 
-				$toDate = strtotime($toDate);
+				$from_date = strtotime($from_date);
 
-				if($toDate <= $date) {
+				if($from_date <= $date) {
 
 					$allow_login = false;
+				}else{
+					$allow_login = true;
 				}
-				
+			}else {
+
+				$allow_login = false;
 			}
+			if(! empty($to_date) && trim($to_date) != '') {
+           	    
+           		$to_date = strtotime($to_date);
 
-			if(! empty($fromDate)) {
-           	
-           		$fromDate = strtotime($fromDate);
-
-           		if($date <= $fromDate && $allow_login == false) {
+           		if($date <= $to_date && $allow_login == false) {
 
            			$allow_login = false;
 
-           		} else {
-
-           			$allow_login = true;
-           		}
-
+           		} 
 			}
-			
 		}
-
 		return $allow_login;
 	}
+
+	public function login_date()
+	{
+	   return $this->config('login_date') === true ? true : false;
+	}
+
+	public function double_verify()
+	{
+	   return $this->config('double_verify') === true ? true : false;
+	}
+
+	public function token_expire($date)
+	{
+		$valid_time = $this->config('valid');
+
+		if(empty($valid_time)){
+			return false;
+		}
+
+		$time = strtotime($date);
+		$current_time = time();
+		$valid_time += $time;
+	    if($current_time <= $valid_time) {
+            
+	    	return false;
+	    }
+
+	    return true;
+	}
+
+
 }
