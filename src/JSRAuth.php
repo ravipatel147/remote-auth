@@ -6,76 +6,107 @@
  * Time: 18:21
  */
 
-namespace Support\Remote;
+namespace Support\RemoteAuth;
 use Illuminate\Support\Facades\Crypt;
+use Support\RemoteAuth\Auth\AuthInterface;
+use Illuminate\Http\Request;
 
 class JSRAuth extends Authentication
 {
  
-	
+	/* intigrate with laravel authetivation layer reference*/
+	protected $auth;
 
 	/* authentication object creation */	
-	function __construct(){
+	function __construct(AuthInterface $auth){
 
-	   Parent::__construct();
-
-	   if(Parent::stopLogin() == false) {
-
-	   		return false;
-	   }
-
+		$this->auth = $auth;
 	}	
 
 	/* attempt login */
-	public static function attempt(array $array) {
+	public function attempt(array $array) {
 
-	   $auth = Parent::verify_auth($array);
-
-	   if(empty($auth)) {
+	   if(! $this->auth->byCredentials($array)) {
 
 	   	   return false;
 	   }
 	   
-	   $key = Parent::get_ancript($auth->getKey());
+	   $key = $this->get_ancript($this->auth->user()->getKey());
 	   return $key;
 	}
 
 	/*return user from token*/
-	public static function user($token)
+	public function user($token)
 	{
-		$auth = Parent::get_decript($token);
-		
-		if(! Parent::stopLogin($auth)) {
+		$auth = $this->get_decript($token);
+		if($auth) {
 
-			return false;
+			if($this->auth->byId($auth['identifire'])) {
+
+			    $remote_user = $this->auth->user();
+			    if($this->login_date()) {
+
+				   $remote_user->login_date = $auth['login_date'];
+				   return $remote_user;
+			    }
+			    return $remote_user;
+			}
+
 		}
-
-		return $auth;
+		
+		return false;
 	}
 
    /*return token from user object*/
-	public static function fromUser($modelObject = null)
+	public function fromUser($modelObject = null)
 	{
 		if(empty($modelObject)) {
 
 			return false;
 		}
 
-		$key = Parent::get_ancript($modelObject->getKey());
+		$key = $this->get_ancript($modelObject->getKey());
 
 		if(empty($key)) {
 
 			return false;
 		}
 
-	    Parent::get_ancript($key);
+	    $this->get_ancript($key);
 	    return $key;
 
 	}
 
 	/*get user login by id*/
-   public static function byId($id) {
+   public  function byId($id) {
 
-   	   return Parent::get_ancript($id);
+   	   return $this->get_ancript($id);
+   }
+
+   /*check token is valid or not*/
+   public function verify($token)  {
+   	 
+   	  $auth = $this->get_decript($token);
+
+   	  if(! $this->stopLogin($auth['login_date']) || $this->token_expire($auth['login_date'])) {
+
+   	  		return false;
+   	  }
+
+   	  if($this->double_verify()){
+
+   	  	 if($this->auth->byId($auth['identifire'])) {
+
+			    $remote_user = $this->auth->user();
+			    if($this->login_date()) {
+
+				   $remote_user->login_date = $auth['login_date'];
+				   return $remote_user;
+			    }
+			    return $remote_user;
+		 }
+   	  }
+
+   	  return $auth;
    }
 }
