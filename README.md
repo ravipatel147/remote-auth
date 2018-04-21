@@ -1,4 +1,4 @@
-# Project Title
+# Remote Auth
 
 Remote auth is a library for laravel api authentication or remote auth user management in web application. Its a token base authentication system that provide many functionality like blocking user between date and get login date of each valid user without any database interaction. Remote auth valid user in two way normally valid check or two way auth check let see it below.
 
@@ -18,18 +18,79 @@ Follow below step for instaiing package into laravel package
 ```
 composer require support/remote-auth
 ```
+Then and below line into provider array in ```config/app.php``` file
 
-And then publish package into laravel app
+```
+Support\RemoteAuth\JSRServiceProvider::class,
+```
 
+Then add into aliash array into this file.
+
+```
+'Remote' => Support\RemoteAuth\Facades\Remote::class,
+```
+
+And then publish package into laravel app.
 ```
 php artisan vendor:publish
 ```
+This command create ```RemoteAuth.php``` file in ```config``` folder. You can enable disable option of package using this file.
 
-End with an example of getting some data out of the system or using it for a little demo
+Then run following command for creating moddleware.
+```
+php artisan make:middleware RemoteAuth
+```
+And then past below code into file
+```
+<?php
 
-## Running the tests
+namespace App\Http\Middleware;
 
-Explain how to run the automated tests for this system
+use Closure;
+use Remote;
+
+class RemoteAuth
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @return mixed
+     */
+    public function handle($request, Closure $next)
+    {
+        /*check token is received or not*/
+        if(empty($request->header('Authorization'))){
+
+            return response()->json(array('token is required'));
+
+        /*check token is valid or not*/
+        }else if($user = Remote::verify($request->header('Authorization'))){
+          
+            /*if valid then user data bind with request*/
+            $request->r_user = $user;
+        
+        }else {
+            
+            /*if token is invalid the return invalid token error*/
+            return response()->json(array('invalid token'));
+        }
+        
+        return $next($request);
+    }
+}
+
+```
+No finally your api authentication is ready now regitered your middleware into your ```kernal.php``` file as your use. Generally people use route middleware so i registered them into ```kernal.php``` as route middleware.
+```
+ protected $routeMiddleware = [
+     ...
+     ...
+     ...
+     remote_auth' =>  \App\Http\Middleware\RemoteAuth::class
+  ];
+```
 
 ### Break down into end to end tests
 
