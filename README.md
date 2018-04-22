@@ -18,13 +18,13 @@ Follow below step for instaiing package into laravel package
 ```
 composer require support/remote-auth
 ```
-Then and below line into provider array in ```config/app.php``` file
+Then add below line into provider array in ```config/app.php``` file
 
 ```
 Support\RemoteAuth\JSRServiceProvider::class,
 ```
 
-Then add into aliash array into this file.
+Then add into aliash array into ```config/app.php``` file.
 
 ```
 'Remote' => Support\RemoteAuth\Facades\Remote::class,
@@ -82,7 +82,19 @@ class RemoteAuth
 }
 
 ```
-No finally your api authentication is ready now regitered your middleware into your ```kernal.php``` file as your use. Generally people use route middleware so i registered them into ```kernal.php``` as route middleware.
+### Important
+if you use above middleware then you get authenticate user into request class instance like as below
+```
+ public function get_detail(Request $request){
+    
+   //get user
+   $user = $request->r_user;
+   //token
+   $token = $request->r_token;
+ }
+```
+Now finally your api authentication is ready now regitered your middleware into your ```kernal.php``` file as your use. Generally people use route middleware so i registered them into ```kernal.php``` as route middleware.
+
 ```
  protected $routeMiddleware = [
      ...
@@ -92,9 +104,34 @@ No finally your api authentication is ready now regitered your middleware into y
   ];
 ```
 
-### Break down into end to end tests
+Use middleware to create authentication route group this type of route consider after login functionallity.
 
-Explain what these tests test and why
+```
+Route::group(['middleware'=>'remote_auth'],function(){
+
+        //route list 
+});
+```
+
+### General Funcrion
+
+You need to use remote auth before using into controller.
+```
+use Remote;
+
+
+//get the current user
+Remote::user($token);
+
+//login by credential
+$token = Remote::attempt(array('email'=>'ravibhanderi14@gmail.com','password'=>'123456'));
+
+//login by id
+
+
+
+
+```
 
 ```
 Give an example
