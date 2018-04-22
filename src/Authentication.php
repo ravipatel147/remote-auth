@@ -115,6 +115,7 @@ class Authentication
 
 		$time = strtotime($date);
 		$current_time = time();
+		$valid_time *= 60;
 		$valid_time += $time;
 	    if($current_time <= $valid_time) {
             
