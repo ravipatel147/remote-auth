@@ -1,6 +1,6 @@
 # Remote Auth
 
-Remote auth is a library for laravel api authentication or remote auth user management in web application. Its a token base authentication system that provide many functionality like blocking user between date and get login date of each valid user without any database interaction. Remote auth valid user in two way normally valid check or two way auth check let see it below.
+Remote auth is a library for laravel api authentication or remote auth user management in web application. Its a token base authentication system that provide many functionality like blocking user between date and get login date of each valid user without any database interaction. Remote auth validate token in two way normally valid check or two way auth check let see it below.
 
 ## Getting Started
 
@@ -83,7 +83,8 @@ class RemoteAuth
 
 ```
 ### Important
-if you use above middleware then you get authenticate user into request class instance like as below
+If you use above middleware then you get authenticate user into request class instance like as below
+
 ```
  public function get_detail(Request $request){
     
@@ -91,8 +92,79 @@ if you use above middleware then you get authenticate user into request class in
    $user = $request->r_user;
    //token
    $token = $request->r_token;
+   
+   dd($user); //dump $user variable
  }
 ```
+If double_verify is true in ```config\RemoteAuth.php``` then is return user recoard.
+
+```
+User {#209
+  #fillable: array:3 [
+    0 => "name"
+    1 => "email"
+    2 => "password"
+  ]
+  #hidden: array:2 [
+    0 => "password"
+    1 => "remember_token"
+  ]
+  #connection: "mysql"
+  #table: null
+  #primaryKey: "id"
+  #keyType: "int"
+  +incrementing: true
+  #with: []
+  #withCount: []
+  #perPage: 15
+  +exists: true
+  +wasRecentlyCreated: false
+  #attributes: array:7 [
+    "id" => 1
+    "name" => "ravi bhanderi"
+    "email" => "ravi@gmail.com"
+    "password" => "$2y$10$hMutgh3AmEdiQbIVosxqS.cdYun4T8f1MK.hjLgrUtFlH3z9axNO6"
+    "remember_token" => "yS3eixwdIGjYqFBwcAvBy09ZyDiXfAQubojNdlogZoa4rbCSQwxJlXVHyp8v"
+    "created_at" => "2017-10-08 18:25:16"
+    "updated_at" => "2017-10-08 18:25:16"
+  ]
+  #original: array:7 [
+    "id" => 1
+    "name" => "ravi bhanderi"
+    "email" => "ravi@gmail.com"
+    "password" => "$2y$10$hMutgh3AmEdiQbIVosxqS.cdYun4T8f1MK.hjLgrUtFlH3z9axNO6"
+    "remember_token" => "yS3eixwdIGjYqFBwcAvBy09ZyDiXfAQubojNdlogZoa4rbCSQwxJlXVHyp8v"
+    "created_at" => "2017-10-08 18:25:16"
+    "updated_at" => "2017-10-08 18:25:16"
+  ]
+  #changes: []
+  #casts: []
+  #dates: []
+  #dateFormat: null
+  #appends: []
+  #dispatchesEvents: []
+  #observables: []
+  #relations: []
+  #touches: []
+  +timestamps: true
+  #visible: []
+  #guarded: array:1 [
+    0 => "*"
+  ]
+  #rememberTokenName: "remember_token"
+}
+```
+
+If double_verify is false in ```config\RemoteAuth.php```. Then it return user identifire(id) and login date
+```
+array:2 [
+  "identifire" => 1
+  "login_date" => Carbon @1524373176 {#186
+    date: 2018-04-22 04:59:36.389266 UTC (+00:00)
+  }
+]
+```
+
 Now finally your api authentication is ready now regitered your middleware into your ```kernal.php``` file as your use. Generally people use route middleware so i registered them into ```kernal.php``` as route middleware.
 
 ```
@@ -132,54 +204,54 @@ Remote::byId($id); //id of user
 //from user model object
 Remote:fromUser($user); //$user is a record of user must be instance of eloquent
 
-//verify token is valid or invalid. Function return user if token is valid and double_verification is on otherwise return identifire and logindate in array. You can on off double_verification using config\RemoteAuth.php.
+//verify token is valid or invalid. Function return user if token is valid and double_verification is on otherwise 
+return identifire and logindate in array. You can on off double_verification using config\RemoteAuth.php.
 
 Remote::verify($token);
 
 ```
 
+### Config file options
+
+Remote auth config file is like as below. its located in ```config\RemoteAuth.php``` after publishing vendor. and lower version of laravel you can create itself. current version of laravel is 5.5
 ```
-Give an example
+<?php
+
+return [
+
+    /*
+    |--------------------------------------------------------------------------
+    | Default Cache Store
+    |--------------------------------------------------------------------------
+    |
+        this is define token validate time in minute
+    |
+    */
+
+    /*if you want to token neverinvalid  just comment below line other wise provide time into minute */
+
+    'valid' => 60, /* menute */
+
+    /*=============================================
+    =      define invlid token beetween two date =
+    ------ date should be format in yyyy/dd/mm------
+
+    ex. if you want to stop access of api login or register user between specific date
+    =============================================*/
+                                                                                                                                                                                                                                                                                                                        
+    'stop_login' => false,
+
+    /* date format should be yyyy/mm/dd */
+    'to_date' => null , 
+    'from_date' => null,
+    /*=====  End  ======*/
+    /*want to autheticate date with model object*/
+    'login_date' => true,
+    /*Verify payload with a data base record. Becuase some time after generating token user deleted from database. If token is generated and after some time user deleted from database. What happen user have their authentication token so if a double_verify is on then user check with also database otherwise remote-auth verify only token is valid*/ 
+    'double_verify' => true,
+    /**/  
+    
+];
+
 ```
 
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
-
-## Built With
-
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
-
-## Authors
-
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Hat tip to anyone who's code was used
-* Inspiration
-* etc
