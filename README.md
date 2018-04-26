@@ -35,6 +35,12 @@ And then publish package into laravel app.
 php artisan vendor:publish
 ```
 This command create ```RemoteAuth.php``` file in ```config``` folder. You can enable disable option of package using this file.
+i suggest to developer also run below command for avoid probleam in feature.
+```
+php artisan key:generate
+php artisan config:cache
+
+```
 
 Then run following command for creating moddleware.
 ```
