@@ -255,8 +255,12 @@ return [
     'login_date' => true,
     /*Verify payload with a data base record. Becuase some time after generating
     token user deleted from database. If token is generated and after some time user
-    deleted from database. What happen user have their authentication token so if a double_verify is on then user check with also           database otherwise remote-auth verify only token is valid*/ 
+    deleted from database. What happen user have their authentication token so if 
+    a double_verify is on then user check with also   
+    database otherwise remote-auth verify only token is valid*/ 
+    
     'double_verify' => true,
+    
     /**/  
     
 ];
